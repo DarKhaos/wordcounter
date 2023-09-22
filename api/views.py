@@ -23,12 +23,13 @@ class WordCounter:
         return dict(sorted_word_count)
 
     @staticmethod
-    def __discard_common_words(sorted_word_count: Dict[str, int], blacklist: List[str]) -> Dict[str, int]:
+    def __discard_common_words(sorted_word_count: Dict[str, int], blacklist: Dict[str, bool]) -> Dict[str, int]:
         result = copy(sorted_word_count)
         discard_count = 0
-        for discarded_word in blacklist:
-            if discard_count < WordCounter.__COMMON_WORDS_TO_DELETE and result.get(discarded_word, None) is not None:
-                del result[discarded_word]
+        for word in sorted_word_count.keys():
+            fewer_deleted_items = discard_count < WordCounter.__COMMON_WORDS_TO_DELETE
+            if fewer_deleted_items and blacklist.get(word, None) is not None and result.get(word, None) is not None:
+                del result[word]
                 discard_count += 1
         return result
     
